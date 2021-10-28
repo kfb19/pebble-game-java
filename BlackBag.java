@@ -12,7 +12,7 @@ public class BlackBag {
 private ArrayList<Integer> contents = new ArrayList<Integer>(); 
 
     /**
-	 * The constructor for the Node class. 
+	 * The constructor for the Black Bag class. 
 	 * @author Kate Belson and Michael Hills
 	 * @param file the file containing the information about the Black Bag. 
      * @throws FileNotFoundException
