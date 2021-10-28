@@ -3,7 +3,6 @@
 
 ## Introduction
 
-This program implements the Huffman Coding compression algorithm in order to reduce the size of a text file. It is written in Java and allows the user to choose what file to compress, as well as working out the percentage reduction in size of the file. 
 
 ## Prerequisites
 
@@ -19,12 +18,10 @@ There is no prior instillation required for this program, other than the correct
 
 ## Getting Started 
 
-Use command line to call the Java compiler (from the directory src in huffman) to compile the program CompressionInterface.java. Then use the Java command to run it. Because the program deals with large files, you need to increase the stack size when running by using the flag -Xss515m. An example of this is below. Follow the instructions given to you in the command line once the program runs, and if the program crashes please restart it as this means you have entered an incorrect input. 
+Use command line...
 
 ```bash
-cd huffman\src
-javac CompressionInterface.java
-java -Xss515m CompressionInterface
+
 ```
 
 ## Developer Documentation
