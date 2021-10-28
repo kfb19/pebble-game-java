@@ -8,7 +8,7 @@
 
 Developed in Java *version here*
 
-the user needs to have
+The user needs to have...
 
 The user also needs the correct version of Java installed. 
 
