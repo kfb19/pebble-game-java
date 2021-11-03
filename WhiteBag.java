@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public class WhiteBag {
 
-private ArrayList<Integer> contents = new ArrayList<Integer>(); 
+private ArrayList<Integer> contents;
 
     /**
 	 * The constructor for the White Bag Class
