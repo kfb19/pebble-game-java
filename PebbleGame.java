@@ -5,8 +5,10 @@ import java.util.Scanner;
 
 public class PebbleGame {
 
+    private int noUsers;
+    private ArrayList<User> users;
 
-    static File getFile(int num){
+    public File getFile(int num){
         Scanner input = new Scanner(System.in);
         boolean validInput = false;
         String fileName = null;
@@ -33,7 +35,7 @@ public class PebbleGame {
         return file;
     }
 
-    public static void main(String[] args) {
+    public int printMenu() {
         System.out.println("""
                 Welcome to the Pebble Game!!\s
                 You will be asked to enter the number of players
@@ -50,58 +52,40 @@ public class PebbleGame {
         do {
             System.out.print("Enter Number: ");
             noUsers = input.nextLine();
-            try{
+            try {
 
                 if (noUsers.equals("E")) {
                     System.exit(0);
-                }
-                else if (Integer.parseInt(noUsers) > 0) {
+                } else if (Integer.parseInt(noUsers) > 0) {
                     validInput = true;
-                }
-                else {
+                } else {
                     System.out.println(("Invalid input: Must be integer > 0: "));
                 }
-            }catch (NumberFormatException ne) {
+            } catch (NumberFormatException ne) {
                 System.out.println("Invalid input: Must be integer > 0: ");
             }
 
         } while (!validInput);
 
-        File black0 = getFile(0);
-        File black1 = getFile(1);
-        File black2 = getFile(2);
+        return Integer.parseInt(noUsers);
+    }
 
-        input.close();
-
-
-        BlackBag blackBag1 = null;
-        BlackBag blackBag2 = null;
-        BlackBag blackBag3 = null;
-
-        try {
-            blackBag1 = new BlackBag(black0);
-            blackBag2 = new BlackBag(black1);
-            blackBag3 = new BlackBag(black2);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        ArrayList<User> users = new ArrayList<User>();
-
-        ArrayList<Integer> contents1 = blackBag1.getContents();
-        ArrayList<Integer> contents2 = blackBag2.getContents();
-        ArrayList<Integer> contents3 = blackBag3.getContents();
-
-        System.out.println(contents1);
-        System.out.println(contents2);
-        System.out.println(contents3);
-
-        Boolean winner = false;
-
-        for (int i=0; i < Integer.parseInt(noUsers); i++){
+    public void setUsers(){
+        for (int i = 0; i < this.noUsers; i++) {
             users.add(new User());
             users.get(i).setPebbles();
         }
-
     }
+
+    public void setNoUsers(int noUsers) {
+        this.noUsers = noUsers;
+    }
+
+    public int getNoUsers(){
+        return noUsers;
+    }
+
+    public PebbleGame() {
+    }
+
 }
