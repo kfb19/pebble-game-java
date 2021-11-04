@@ -8,6 +8,7 @@ public class Main {
         PebbleGame pebbleGame = new PebbleGame();
         pebbleGame.setNoUsers(pebbleGame.printMenu());
 
+
         File black0 = pebbleGame.getFile(0);
         File black1 = pebbleGame.getFile(1);
         File black2 = pebbleGame.getFile(2);
@@ -26,11 +27,7 @@ public class Main {
 
         pebbleGame.setUsers();
 
-        
-
-
-
-
+        System.out.println(pebbleGame.getNoUsers());
 
 
     }
