@@ -5,8 +5,10 @@ import java.util.Scanner;
 
 public class PebbleGame {
 
+    private int noUsers;
+    private ArrayList<User> users;
 
-    static File getFile(int num){
+    public File getFile(int num){
         Scanner input = new Scanner(System.in);
         boolean validInput = false;
         String fileName = null;
@@ -33,7 +35,7 @@ public class PebbleGame {
         return file;
     }
 
-    public static void main(String[] args) {
+    public int printMenu() {
         System.out.println("""
                 Welcome to the Pebble Game!!\s
                 You will be asked to enter the number of players
@@ -50,58 +52,95 @@ public class PebbleGame {
         do {
             System.out.print("Enter Number: ");
             noUsers = input.nextLine();
-            try{
+            try {
 
                 if (noUsers.equals("E")) {
                     System.exit(0);
-                }
-                else if (Integer.parseInt(noUsers) > 0) {
+                } else if (Integer.parseInt(noUsers) > 0) {
                     validInput = true;
-                }
-                else {
+                } else {
                     System.out.println(("Invalid input: Must be integer > 0: "));
                 }
-            }catch (NumberFormatException ne) {
+            } catch (NumberFormatException ne) {
                 System.out.println("Invalid input: Must be integer > 0: ");
             }
 
         } while (!validInput);
 
-        File black0 = getFile(0);
-        File black1 = getFile(1);
-        File black2 = getFile(2);
+        return Integer.parseInt(noUsers);
+    }
 
-        input.close();
+    class User{
+        private ArrayList<Integer> pebbles;
 
-
-        BlackBag blackBag1 = null;
-        BlackBag blackBag2 = null;
-        BlackBag blackBag3 = null;
-
-        try {
-            blackBag1 = new BlackBag(black0);
-            blackBag2 = new BlackBag(black1);
-            blackBag3 = new BlackBag(black2);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+        /**
+         * The constructor for the User class.
+         * @author Kate Belson and Michael Hills
+         */
+        public User ()  {
+            setPebbles();
         }
 
-        ArrayList<User> users = new ArrayList<User>();
+        //setter methods
 
-        ArrayList<Integer> contents1 = blackBag1.getContents();
-        ArrayList<Integer> contents2 = blackBag2.getContents();
-        ArrayList<Integer> contents3 = blackBag3.getContents();
+        /**
+         * Sets the list of pebbles.
+         * @author Kate Belson and Michael Hills
+         */
+        public void setPebbles() {
+            this.pebbles = new ArrayList<Integer>();
+            for (int i = 0; i < 10; i++){
 
-        System.out.println(contents1);
-        System.out.println(contents2);
-        System.out.println(contents3);
+            }
+        }
 
-        Boolean winner = false;
+        public void addPebble(int Pebble){
+            pebbles.add(Pebble);
+        }
 
-        for (int i=0; i < Integer.parseInt(noUsers); i++){
-            users.add(new User());
-            users.get(i).setPebbles();
+        //getter methods
+
+        /**
+         * Returns the list of pebbles held by the user.
+         * @author Kate Belson and Michael Hills
+         * @return the list of pebbles help by the user.
+         */
+        public ArrayList<Integer> getPebbles() {
+            return this.pebbles;
+        }
+
+        /**
+         * Returns the total value of the pebbles held by the user.
+         * @author Kate Belson and Michael Hills
+         * @return the total value of the pebbles help by the user.
+         */
+        public int getTotal() {
+            int total = 0;
+            for (Integer pebble : pebbles) {
+                total = total + pebble;
+            }
+            return total;
         }
 
     }
+
+    public void setUsers(){
+        this.users = new ArrayList<User>();
+        for (int i = 0; i < noUsers; i++) {
+            users.add(new User());
+            users.get(i).setPebbles();
+        }
+    }
+
+    public void setNoUsers(int noUsers) {
+        this.noUsers = noUsers;
+    }
+
+    public int getNoUsers(){
+        return noUsers;
+    }
+
+    public PebbleGame() {
+    }
+
 }
