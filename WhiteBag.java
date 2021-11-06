@@ -8,12 +8,15 @@ import java.util.ArrayList;
 public class WhiteBag {
 
     private ArrayList<Integer> contents = new ArrayList<Integer>();
+    private BlackBag blackBag;
 
     /**
      * The constructor for the White Bag Class
      * @author Kate Belson and Michael Hills
      */
-    public  WhiteBag () {
+    public  WhiteBag (BlackBag blackBag) {
+        this.blackBag = blackBag;
+        blackBag.setWhiteBag(this);
         setContents();
     }
 

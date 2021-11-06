@@ -1,38 +1,55 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Scanner;
 
 public class PebbleGame {
 
     private int noUsers;
     private ArrayList<User> users;
+    private ArrayList<BlackBag> blackBags = new ArrayList<>();
 
-    public File getFile(int num){
+    public BlackBag generateBlack(int num){
         Scanner input = new Scanner(System.in);
         boolean validInput = false;
-        String fileName = null;
+        String fileName;
+        BlackBag blackBag = null;
 
         do {
-            System.out.println("Please enter location of bag number " + num + " to load: ");
+            System.out.print("Please enter location of bag number " + num + " to load: ");
             String type = input.nextLine();
-            fileName = System.getProperty("user.dir")+"\\src\\" + type;
+            fileName = System.getProperty("user.dir") + "\\src\\" + type;
 
-            if (type.equals("E")){
+            if (type.equals("E")) {
                 System.exit(0);
             }
-            else if(new File(fileName).isFile()) {
+            else if (new File(fileName).isFile()) {
+
                 validInput = true;
+                File file = new File(fileName);
+                try {
+                    blackBag = new BlackBag(file);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }catch (NumberFormatException ex){
+                    validInput = false;
+                    System.out.println("Invalid File Contents: File must be positive integers " +
+                            "separated by commas");
+                }
 
             }
-            else{
+            else {
                 System.out.println("Invalid file name: file does not exist");
             }
 
         } while (!validInput);
 
-        File file = new File(fileName);
-        return file;
+        blackBags.add(blackBag);
+        return blackBag;
+
+
     }
 
     public int printMenu() {
@@ -48,7 +65,7 @@ public class PebbleGame {
 
         boolean validInput = false;
         Scanner input = new Scanner(System.in);
-        String noUsers = null;
+        String noUsers;
         do {
             System.out.print("Enter Number: ");
             noUsers = input.nextLine();
@@ -71,7 +88,7 @@ public class PebbleGame {
     }
 
     class User{
-        private ArrayList<Integer> pebbles;
+        private List<Integer> pebbles = Collections.synchronizedList(new ArrayList<Integer>());
 
         /**
          * The constructor for the User class.
@@ -87,10 +104,16 @@ public class PebbleGame {
          * Sets the list of pebbles.
          * @author Kate Belson and Michael Hills
          */
+
+        public int getRandomNumber(int min, int max) {
+            return (int) ((Math.random() * (max - min)) + min);
+        }
+
         public void setPebbles() {
             this.pebbles = new ArrayList<Integer>();
+            BlackBag blackBag = blackBags.get(getRandomNumber(0,2));
             for (int i = 0; i < 10; i++){
-
+                pebbles.add(blackBag.takeRock(getRandomNumber(0,blackBag.getNoRocks())));
             }
         }
 
@@ -105,9 +128,10 @@ public class PebbleGame {
          * @author Kate Belson and Michael Hills
          * @return the list of pebbles help by the user.
          */
-        public ArrayList<Integer> getPebbles() {
-            return this.pebbles;
+        public List<Integer> getPebbles() {
+            return pebbles;
         }
+
 
         /**
          * Returns the total value of the pebbles held by the user.
@@ -138,6 +162,10 @@ public class PebbleGame {
 
     public int getNoUsers(){
         return noUsers;
+    }
+
+    public ArrayList<User> getUsers(){
+        return users;
     }
 
     public PebbleGame() {

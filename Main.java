@@ -1,34 +1,61 @@
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
-public class Main {
+
+public class Main{
+
+    private static PebbleGame pebbleGame;
+
+    public static void createPebbleGame(){
+        pebbleGame = new PebbleGame();
+    }
+
+
     public static void main(String[] args) {
 
-        PebbleGame pebbleGame = new PebbleGame();
-        pebbleGame.setNoUsers(pebbleGame.printMenu());
+        Main.createPebbleGame();
+        Main.pebbleGame.setNoUsers(Main.pebbleGame.printMenu());
 
 
-        File black0 = pebbleGame.getFile(0);
-        File black1 = pebbleGame.getFile(1);
-        File black2 = pebbleGame.getFile(2);
+        BlackBag blackBag1 = Main.pebbleGame.generateBlack(0);
+        BlackBag blackBag2 = Main.pebbleGame.generateBlack(1);
+        BlackBag blackBag3 = Main.pebbleGame.generateBlack(2);
 
-        BlackBag blackBag1 = null;
-        BlackBag blackBag2 = null;
-        BlackBag blackBag3 = null;
+        WhiteBag whiteBag1 = new WhiteBag(blackBag1);
+        WhiteBag whiteBag2 = new WhiteBag(blackBag2);
+        WhiteBag whiteBag3 = new WhiteBag(blackBag3);
 
-        try {
-            blackBag1 = new BlackBag(black0);
-            blackBag2 = new BlackBag(black1);
-            blackBag3 = new BlackBag(black2);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+
+        Main.pebbleGame.setUsers();
+
+
+
+        ArrayList<Thread> threads = new ArrayList<Thread>();
+        ArrayList<PebbleGame.User> users = Main.pebbleGame.getUsers();
+
+
+
+        for (int i = 0; i < Main.pebbleGame.getNoUsers(); i++){
+            users.add(Main.pebbleGame.new User());
+            threads.add(new Thread(new Players(users.get(i))));
+            threads.get(i).start();
+
         }
 
-        pebbleGame.setUsers();
 
-        System.out.println(pebbleGame.getNoUsers());
+    }
+}
 
+class Players implements Runnable{
 
+    private final PebbleGame.User user;
+
+    public void run(){
+        user.setPebbles();
+        System.out.println(user.getPebbles());
+
+    }
+
+    public Players(PebbleGame.User user){
+        this.user = user;
     }
 }

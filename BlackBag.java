@@ -10,6 +10,7 @@ import java.io.*;
 public class BlackBag {
 
     private ArrayList<Integer> contents = new ArrayList<Integer>();
+    private WhiteBag whiteBag;
 
     /**
      * The constructor for the Node class.
@@ -19,6 +20,13 @@ public class BlackBag {
      */
     public BlackBag (File file) throws FileNotFoundException {
         setContents(file);
+    }
+
+    public int takeRock(int pos){
+        int pebble = contents.get(pos);
+        contents.remove(pos);
+        return pebble;
+
     }
 
     //setter methods
@@ -35,11 +43,17 @@ public class BlackBag {
             String data = fileReader.nextLine();
             data = data.replaceAll("\\s+","");
             String[] values = data.split(",");
-            for (int i=0; i<values.length; i++) {
+
+            for (int i = 0; i < values.length; i++) {
                 contents.add(Integer.parseInt(values[i]));
             }
+
         }
         fileReader.close();
+    }
+
+    public void setWhiteBag(WhiteBag whiteBag){
+        this.whiteBag = whiteBag;
     }
 
     public int getLength(){
@@ -56,6 +70,11 @@ public class BlackBag {
     public ArrayList<Integer> getContents() {
         return this.contents;
     }
+
+    public int getNoRocks(){
+        return contents.size();
+    }
+
 
 }
 
