@@ -25,10 +25,6 @@ public class Main{
         WhiteBag whiteBag3 = new WhiteBag(blackBag3);
 
 
-        Main.pebbleGame.setUsers();
-
-
-
         ArrayList<Thread> threads = new ArrayList<Thread>();
         ArrayList<PebbleGame.User> users = Main.pebbleGame.getUsers();
 

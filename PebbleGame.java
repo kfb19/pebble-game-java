@@ -8,7 +8,7 @@ import java.util.Scanner;
 public class PebbleGame {
 
     private int noUsers;
-    private ArrayList<User> users;
+    private ArrayList<User> users = new ArrayList<>();
     private ArrayList<BlackBag> blackBags = new ArrayList<>();
 
     public BlackBag generateBlack(int num){
@@ -95,7 +95,7 @@ public class PebbleGame {
          * @author Kate Belson and Michael Hills
          */
         public User ()  {
-            setPebbles();
+
         }
 
         //setter methods
@@ -105,19 +105,20 @@ public class PebbleGame {
          * @author Kate Belson and Michael Hills
          */
 
-        public int getRandomNumber(int min, int max) {
+        public synchronized int getRandomNumber(int min, int max) {
             return (int) ((Math.random() * (max - min)) + min);
         }
 
         public void setPebbles() {
-            this.pebbles = new ArrayList<Integer>();
             BlackBag blackBag = blackBags.get(getRandomNumber(0,2));
-            for (int i = 0; i < 10; i++){
-                pebbles.add(blackBag.takeRock(getRandomNumber(0,blackBag.getNoRocks())));
+            synchronized (blackBag.getContents()) {
+                for (int i = 0; i < 10; i++) {
+                    pebbles.add(blackBag.takeRock(getRandomNumber(0, blackBag.getNoRocks() - 1)));
+                }
             }
         }
 
-        public void addPebble(int Pebble){
+        public synchronized void addPebble(int Pebble){
             pebbles.add(Pebble);
         }
 
@@ -128,7 +129,7 @@ public class PebbleGame {
          * @author Kate Belson and Michael Hills
          * @return the list of pebbles help by the user.
          */
-        public List<Integer> getPebbles() {
+        public synchronized List<Integer> getPebbles() {
             return pebbles;
         }
 
@@ -138,7 +139,7 @@ public class PebbleGame {
          * @author Kate Belson and Michael Hills
          * @return the total value of the pebbles help by the user.
          */
-        public int getTotal() {
+        public synchronized int getTotal() {
             int total = 0;
             for (Integer pebble : pebbles) {
                 total = total + pebble;
@@ -148,6 +149,7 @@ public class PebbleGame {
 
     }
 
+    /*
     public void setUsers(){
         this.users = new ArrayList<User>();
         for (int i = 0; i < noUsers; i++) {
@@ -155,6 +157,8 @@ public class PebbleGame {
             users.get(i).setPebbles();
         }
     }
+    */
+
 
     public void setNoUsers(int noUsers) {
         this.noUsers = noUsers;

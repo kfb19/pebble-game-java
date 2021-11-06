@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Scanner;
 import java.io.*;
 
@@ -9,7 +11,7 @@ import java.io.*;
 
 public class BlackBag {
 
-    private ArrayList<Integer> contents = new ArrayList<Integer>();
+    private List<Integer> contents = Collections.synchronizedList(new ArrayList<Integer>());
     private WhiteBag whiteBag;
 
     /**
@@ -23,9 +25,11 @@ public class BlackBag {
     }
 
     public int takeRock(int pos){
-        int pebble = contents.get(pos);
-        contents.remove(pos);
-        return pebble;
+        synchronized (contents) {
+            int pebble = contents.get(pos);
+            contents.remove(pos);
+            return pebble;
+        }
 
     }
 
@@ -67,12 +71,16 @@ public class BlackBag {
      * @author Kate Belson and Michael Hills
      * @return the contents of the Black Bag.
      */
-    public ArrayList<Integer> getContents() {
+    public List<Integer> getContents() {
+
         return this.contents;
     }
 
     public int getNoRocks(){
-        return contents.size();
+        synchronized (contents){
+            return contents.size();
+        }
+
     }
 
 
