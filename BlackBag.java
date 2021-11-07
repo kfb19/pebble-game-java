@@ -26,13 +26,8 @@ public class BlackBag {
 
     }
 
-    public synchronized int getRandomNumber(int min, int max) {
-        return (int)Math.floor(Math.random()*(max-min+1)+min);
-    }
-
     public int takeRock(int pos){
         synchronized (contents) {
-            synchronized (whiteBag.getContents()) {
                 if (contents.size() == 0) {
                     contents = whiteBag.switchBags();
                 }
@@ -40,7 +35,6 @@ public class BlackBag {
                 int pebble = contents.get(pos);
                 contents.remove(pos);
                 return pebble;
-            }
         }
     }
 
@@ -78,7 +72,7 @@ public class BlackBag {
      * @author Kate Belson and Michael Hills
      * @return the contents of the Black Bag.
      */
-    public synchronized List<Integer> getContents() {
+    public List<Integer> getContents() {
         synchronized (contents){
             return this.contents;
         }

@@ -16,11 +16,9 @@ public class WhiteBag {
 
     public List<Integer> switchBags(){
         synchronized (contents) {
-            synchronized (blackBag.getContents()){
                 List<Integer> black = Collections.synchronizedList(new ArrayList<Integer>(contents));
                 contents.clear();
                 return black;
-            }
         }
     }
 
@@ -36,8 +34,6 @@ public class WhiteBag {
     }
 
     //setter methods
-
-
     /**
      * Sets the contents of the White Bag.
      * @author Kate Belson and Michael Hills

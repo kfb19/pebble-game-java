@@ -30,6 +30,10 @@ public class PebbleGame {
                 File file = new File(fileName);
                 try {
                     blackBag = new BlackBag(file,bagName);
+                    if (blackBag.getContents().size() < noUsers*11){
+                        System.out.println("Invalid file contents: File must contain at least 11" +
+                                " times as many pebbles as players");
+                    }
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }catch (NumberFormatException ex){
@@ -115,7 +119,7 @@ public class PebbleGame {
         private void createFile() {
             try {
                 file = new FileWriter(playerName + "_output.txt", false);
-                            } catch (IOException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
@@ -123,6 +127,11 @@ public class PebbleGame {
         public void addToFile(String s){
             try {
                 file.write(s + System.getProperty("line.separator"));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                file.flush();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -139,55 +148,49 @@ public class PebbleGame {
             }
         }
 
-        public synchronized void addPebble(){
+        public void addPebble(){
             BlackBag blackBag = blackBags.get(getRandomNumber(0,2));
             synchronized (blackBag.getContents()){
 
-                    int toRemove = getRandomNumber(0, 9);
-                    int removePebble = pebbles.get(toRemove);
-                    System.out.println(blackBag.getWhiteBag().getBagName());
-                    System.out.println(blackBag.getBagName());
-                    blackBag.getWhiteBag().addPebble(pebbles.get(toRemove));
-                    pebbles.remove(toRemove);
+                int toRemove = getRandomNumber(0, 9);
+                int removePebble = pebbles.get(toRemove);
 
-                    addToFile(playerName + "has discarded " + removePebble + " to bag "
-                            + blackBag.getWhiteBag().getBagName());
-                    addToFile(playerName + " hand is " + pebbles);
+                blackBag.getWhiteBag().addPebble(pebbles.get(toRemove));
+                pebbles.remove(toRemove);
 
-                    int toAdd = getRandomNumber(0, blackBag.getNoRocks() - 1);
-                    int addPebble = blackBag.getContents().get(toAdd);
-                    pebbles.add(blackBag.takeRock(toAdd));
+                addToFile(playerName + "has discarded " + removePebble + " to bag "
+                        + blackBag.getWhiteBag().getBagName());
+                addToFile(playerName + " hand is " + pebbles);
 
-                    addToFile(playerName + " has drawn " + toAdd + " from bag "
-                            + blackBag.getBagName());
-                    addToFile(playerName + " hand is " + pebbles);
+                int toAdd = getRandomNumber(0, blackBag.getNoRocks() - 1);
+                int addPebble = blackBag.takeRock(toAdd);
+                pebbles.add(addPebble);
+
+                addToFile(playerName + " has drawn " + addPebble + " from bag "
+                        + blackBag.getBagName());
+                addToFile(playerName + " hand is " + pebbles);
 
             }
         }
 
         //getter methods
-
-        /**
-         * Returns the list of pebbles held by the user.
-         * @author Kate Belson and Michael Hills
-         * @return the list of pebbles help by the user.
-         */
-        public synchronized List<Integer> getPebbles() {
-            return pebbles;
-        }
-
-
         /**
          * Returns the total value of the pebbles held by the user.
          * @author Kate Belson and Michael Hills
          * @return the total value of the pebbles help by the user.
          */
-        public synchronized int getTotal() {
-            int total = 0;
-            for (Integer pebble : pebbles) {
-                total = total + pebble;
+        public int getTotal() {
+            synchronized (pebbles) {
+                int total = 0;
+                for (Integer pebble : pebbles) {
+                    total = total + pebble;
+                }
+                return total;
             }
-            return total;
+        }
+
+        public String getPlayerName(){
+            return playerName;
         }
 
     }
