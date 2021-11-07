@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * The BlackBag class processes the Black Bag file and the information it contains.
@@ -7,20 +9,34 @@ import java.util.ArrayList;
 
 public class WhiteBag {
 
-    private ArrayList<Integer> contents = new ArrayList<Integer>();
+    private List<Integer> contents = Collections.synchronizedList(new ArrayList<Integer>());
     private BlackBag blackBag;
+    private char bagName;
+
+
+    public List<Integer> switchBags(){
+        synchronized (contents) {
+            synchronized (blackBag.getContents()){
+                List<Integer> black = Collections.synchronizedList(new ArrayList<Integer>(contents));
+                contents.clear();
+                return black;
+            }
+        }
+    }
 
     /**
      * The constructor for the White Bag Class
      * @author Kate Belson and Michael Hills
      */
-    public  WhiteBag (BlackBag blackBag) {
+    public  WhiteBag (BlackBag blackBag,char bagName) {
         this.blackBag = blackBag;
+        this.bagName = bagName;
         blackBag.setWhiteBag(this);
         setContents();
     }
 
     //setter methods
+
 
     /**
      * Sets the contents of the White Bag.
@@ -30,6 +46,12 @@ public class WhiteBag {
         this.contents = new ArrayList<Integer>();
     }
 
+    public void addPebble(int pebble){
+        synchronized (contents){
+            contents.add(pebble);
+        }
+    }
+
     //getter methods
 
     /**
@@ -37,8 +59,11 @@ public class WhiteBag {
      * @author Kate Belson and Michael Hills
      * @return the contents of the White Bag.
      */
-    public ArrayList<Integer> getContents() {
-        return this.contents;
+    public List<Integer> getContents() {
+        return contents;
     }
 
+    public char getBagName() {
+        return bagName;
+    }
 }

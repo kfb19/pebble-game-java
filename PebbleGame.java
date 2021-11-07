@@ -1,5 +1,4 @@
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -11,7 +10,7 @@ public class PebbleGame {
     private ArrayList<User> users = new ArrayList<>();
     private ArrayList<BlackBag> blackBags = new ArrayList<>();
 
-    public BlackBag generateBlack(int num){
+    public BlackBag generateBlack(int num, char bagName){
         Scanner input = new Scanner(System.in);
         boolean validInput = false;
         String fileName;
@@ -30,7 +29,7 @@ public class PebbleGame {
                 validInput = true;
                 File file = new File(fileName);
                 try {
-                    blackBag = new BlackBag(file);
+                    blackBag = new BlackBag(file,bagName);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }catch (NumberFormatException ex){
@@ -89,14 +88,19 @@ public class PebbleGame {
 
     class User{
         private List<Integer> pebbles = Collections.synchronizedList(new ArrayList<Integer>());
+        private Writer file;
+        private String playerName;
 
         /**
          * The constructor for the User class.
          * @author Kate Belson and Michael Hills
          */
-        public User ()  {
+        public User (String playerName)  {
+            this.playerName = playerName;
+            createFile();
 
         }
+
 
         //setter methods
 
@@ -104,10 +108,26 @@ public class PebbleGame {
          * Sets the list of pebbles.
          * @author Kate Belson and Michael Hills
          */
-
         public synchronized int getRandomNumber(int min, int max) {
-            return (int) ((Math.random() * (max - min)) + min);
+            return (int)Math.floor(Math.random()*(max-min+1)+min);
         }
+
+        private void createFile() {
+            try {
+                file = new FileWriter(playerName + "_output.txt", false);
+                            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        public void addToFile(String s){
+            try {
+                file.write(s + System.getProperty("line.separator"));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
 
         public void setPebbles() {
             BlackBag blackBag = blackBags.get(getRandomNumber(0,2));
@@ -115,11 +135,34 @@ public class PebbleGame {
                 for (int i = 0; i < 10; i++) {
                     pebbles.add(blackBag.takeRock(getRandomNumber(0, blackBag.getNoRocks() - 1)));
                 }
+                addToFile(playerName + " hand is " + pebbles);
             }
         }
 
-        public synchronized void addPebble(int Pebble){
-            pebbles.add(Pebble);
+        public synchronized void addPebble(){
+            BlackBag blackBag = blackBags.get(getRandomNumber(0,2));
+            synchronized (blackBag.getContents()){
+
+                    int toRemove = getRandomNumber(0, 9);
+                    int removePebble = pebbles.get(toRemove);
+                    System.out.println(blackBag.getWhiteBag().getBagName());
+                    System.out.println(blackBag.getBagName());
+                    blackBag.getWhiteBag().addPebble(pebbles.get(toRemove));
+                    pebbles.remove(toRemove);
+
+                    addToFile(playerName + "has discarded " + removePebble + " to bag "
+                            + blackBag.getWhiteBag().getBagName());
+                    addToFile(playerName + " hand is " + pebbles);
+
+                    int toAdd = getRandomNumber(0, blackBag.getNoRocks() - 1);
+                    int addPebble = blackBag.getContents().get(toAdd);
+                    pebbles.add(blackBag.takeRock(toAdd));
+
+                    addToFile(playerName + " has drawn " + toAdd + " from bag "
+                            + blackBag.getBagName());
+                    addToFile(playerName + " hand is " + pebbles);
+
+            }
         }
 
         //getter methods
@@ -149,15 +192,6 @@ public class PebbleGame {
 
     }
 
-    /*
-    public void setUsers(){
-        this.users = new ArrayList<User>();
-        for (int i = 0; i < noUsers; i++) {
-            users.add(new User());
-            users.get(i).setPebbles();
-        }
-    }
-    */
 
 
     public void setNoUsers(int noUsers) {

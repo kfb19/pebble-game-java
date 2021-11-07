@@ -8,11 +8,11 @@ import java.io.*;
  * The BlackBag class processes the Black Bag file and the information it contains.
  * @author Kate Belson and Michael Hills
  */
-
 public class BlackBag {
 
     private List<Integer> contents = Collections.synchronizedList(new ArrayList<Integer>());
     private WhiteBag whiteBag;
+    private char bagName;
 
     /**
      * The constructor for the Node class.
@@ -20,17 +20,28 @@ public class BlackBag {
      * @param file the file containing the information about the Black Bag.
      * @throws FileNotFoundException
      */
-    public BlackBag (File file) throws FileNotFoundException {
+    public BlackBag (File file,char bagName) throws FileNotFoundException {
+        this.bagName = bagName;
         setContents(file);
+
+    }
+
+    public synchronized int getRandomNumber(int min, int max) {
+        return (int)Math.floor(Math.random()*(max-min+1)+min);
     }
 
     public int takeRock(int pos){
         synchronized (contents) {
-            int pebble = contents.get(pos);
-            contents.remove(pos);
-            return pebble;
-        }
+            synchronized (whiteBag.getContents()) {
+                if (contents.size() == 0) {
+                    contents = whiteBag.switchBags();
+                }
 
+                int pebble = contents.get(pos);
+                contents.remove(pos);
+                return pebble;
+            }
+        }
     }
 
     //setter methods
@@ -51,7 +62,6 @@ public class BlackBag {
             for (int i = 0; i < values.length; i++) {
                 contents.add(Integer.parseInt(values[i]));
             }
-
         }
         fileReader.close();
     }
@@ -60,9 +70,6 @@ public class BlackBag {
         this.whiteBag = whiteBag;
     }
 
-    public int getLength(){
-        return contents.size();
-    }
 
     //getter methods
 
@@ -71,9 +78,10 @@ public class BlackBag {
      * @author Kate Belson and Michael Hills
      * @return the contents of the Black Bag.
      */
-    public List<Integer> getContents() {
-
-        return this.contents;
+    public synchronized List<Integer> getContents() {
+        synchronized (contents){
+            return this.contents;
+        }
     }
 
     public int getNoRocks(){
@@ -83,6 +91,12 @@ public class BlackBag {
 
     }
 
+    public WhiteBag getWhiteBag() {
+        return whiteBag;
+    }
 
+    public char getBagName() {
+        return bagName;
+    }
 }
 
