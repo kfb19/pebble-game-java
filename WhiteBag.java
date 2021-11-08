@@ -1,41 +1,65 @@
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
-* The BlackBag class processes the Black Bag file and the information it contains. 
-* @author Kate Belson and Michael Hills
-*/
+ * The BlackBag class processes the Black Bag file and the information it contains.
+ * @author Kate Belson and Michael Hills
+ */
 
 public class WhiteBag {
 
-private ArrayList<Integer> contents;
+    private List<Integer> contents = Collections.synchronizedList(new ArrayList<Integer>());
+    private BlackBag blackBag;
+    private char bagName;
+
+
+    public List<Integer> switchBags(){
+        synchronized (contents) {
+                List<Integer> black = Collections.synchronizedList(new ArrayList<Integer>(contents));
+                contents.clear();
+                return black;
+        }
+    }
 
     /**
-	 * The constructor for the White Bag Class
-	 * @author Kate Belson and Michael Hills
-	 */
-	public WhiteBag () {
+     * The constructor for the White Bag Class
+     * @author Kate Belson and Michael Hills
+     */
+    public  WhiteBag (BlackBag blackBag,char bagName) {
+        this.blackBag = blackBag;
+        this.bagName = bagName;
+        blackBag.setWhiteBag(this);
         setContents();
     }
 
-    //setter methods 
+    //setter methods
+    /**
+     * Sets the contents of the White Bag.
+     * @author Kate Belson and Michael Hills
+     */
+    public void setContents() {
+        this.contents = new ArrayList<Integer>();
+    }
 
-	/**
-	 * Sets the contents of the White Bag. 
-	 * @author Kate Belson and Michael Hills                    
-	 */
-	public void setContents() {
-        this.contents = new ArrayList<Integer>(); 
-	}
+    public void addPebble(int pebble){
+        synchronized (contents){
+            contents.add(pebble);
+        }
+    }
 
-    //getter methods 
+    //getter methods
 
     /**
-	 * Returns the contents of the White Bag. 
-	 * @author Kate Belson and Michael Hills 
-	 * @return the contents of the White Bag. 
-	 */
-	public ArrayList<Integer> getContents() {
-		return this.contents;
-	}
+     * Returns the contents of the White Bag.
+     * @author Kate Belson and Michael Hills
+     * @return the contents of the White Bag.
+     */
+    public List<Integer> getContents() {
+        return contents;
+    }
 
+    public char getBagName() {
+        return bagName;
+    }
 }
