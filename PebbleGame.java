@@ -4,12 +4,66 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * The PebbleGame class provides the functionality and running of the game. 
+ * @author Kate Belson and Michael Hills
+ */
+
 public class PebbleGame {
 
     private int noUsers;
     private ArrayList<User> users = new ArrayList<>();
     private ArrayList<BlackBag> blackBags = new ArrayList<>();
 
+    //constructor 
+
+    /**
+     * The constructor for the PebbleGame class. 
+     * @author Kate Belson and Michael Hills
+     */
+    public PebbleGame() {
+    }
+
+    //setter methods
+
+    /**
+     * Sets the number of users playing the game. 
+     * @author Kate Belson and Michael Hills
+     * @param noUsers contains the number of game players. 
+     */
+    public void setNoUsers(int noUsers) {
+        this.noUsers = noUsers;
+    }
+
+    //getter methods
+
+    /**
+     * Returns the number of game players. 
+     * @author Kate Belson and Michael Hills
+     * @return the number of users. 
+     */
+    public int getNoUsers(){
+        return noUsers;
+    }
+
+    /**
+     * Returns the list of game players. 
+     * @author Kate Belson and Michael Hills
+     * @return the list of users. 
+     */
+    public ArrayList<User> getUsers(){
+        return users;
+    }
+
+    //other methods 
+
+    /**
+     * Generates a black bag based on the number of users in the game. 
+     * @author Kate Belson and Michael Hills
+     * @param num the number of the bag being created. 
+     * @param bagName the name of the bag being created. 
+	 * @return the black bag that has just been created. 
+     */
     public BlackBag generateBlack(int num, char bagName){
         Scanner input = new Scanner(System.in);
         boolean validInput = false;
@@ -55,6 +109,11 @@ public class PebbleGame {
 
     }
 
+    /**
+     * Prints the menu options for the start of the game. 
+     * @author Kate Belson and Michael Hills
+	 * @return the integer number of users for the game. 
+     */
     public int printMenu() {
         System.out.println("""
                 Welcome to the Pebble Game!!\s
@@ -90,6 +149,12 @@ public class PebbleGame {
         return Integer.parseInt(noUsers);
     }
 
+    //nested classes 
+
+    /**
+    * The User class with information about the users of the game. 
+    * @author Kate Belson and Michael Hills
+    */
     class User{
         private List<Integer> pebbles = Collections.synchronizedList(new ArrayList<Integer>());
         private Writer file;
@@ -105,17 +170,54 @@ public class PebbleGame {
 
         }
 
-
         //setter methods
 
         /**
          * Sets the list of pebbles.
          * @author Kate Belson and Michael Hills
          */
-        public synchronized int getRandomNumber(int min, int max) {
-            return (int)Math.floor(Math.random()*(max-min+1)+min);
+        public void setPebbles() {
+            BlackBag blackBag = blackBags.get(getRandomNumber(0,2));
+            synchronized (blackBag.getContents()) {
+                for (int i = 0; i < 10; i++) {
+                    pebbles.add(blackBag.takeRock(getRandomNumber(0, blackBag.getNoRocks() - 1)));
+                }
+                addToFile(playerName + " hand is " + pebbles);
+            }
         }
 
+         //getter methods
+
+        /**
+         * Returns the total value of the pebbles held by the user.
+         * @author Kate Belson and Michael Hills
+         * @return the total value of the pebbles help by the user.
+         */
+        public int getTotal() {
+            synchronized (pebbles) {
+                int total = 0;
+                for (Integer pebble : pebbles) {
+                    total = total + pebble;
+                }
+                return total;
+            }
+        }
+
+        /**
+         * Returns the name of the player. 
+         * @author Kate Belson and Michael Hills
+         * @return the name of the player. 
+         */
+        public String getPlayerName(){
+            return playerName;
+        }
+
+        //other methods
+
+         /**
+         * Creates the user's output file. 
+         * @author Kate Belson and Michael Hills
+         */
         private void createFile() {
             try {
                 file = new FileWriter(playerName + "_output.txt", false);
@@ -124,6 +226,11 @@ public class PebbleGame {
             }
         }
 
+         /**
+         * Adds the user information to their file. 
+         * @param s is the name of the file. 
+         * @author Kate Belson and Michael Hills
+         */
         public void addToFile(String s){
             try {
                 file.write(s + System.getProperty("line.separator"));
@@ -137,17 +244,21 @@ public class PebbleGame {
             }
         }
 
-
-        public void setPebbles() {
-            BlackBag blackBag = blackBags.get(getRandomNumber(0,2));
-            synchronized (blackBag.getContents()) {
-                for (int i = 0; i < 10; i++) {
-                    pebbles.add(blackBag.takeRock(getRandomNumber(0, blackBag.getNoRocks() - 1)));
-                }
-                addToFile(playerName + " hand is " + pebbles);
-            }
+         /**
+         * Generates a random number. 
+         * @author Kate Belson and Michael Hills
+         * @param min the minimum value of the random number. 
+         * @param max the maximum value of the random number. 
+         * @return the random number generated. 
+         */
+        public synchronized int getRandomNumber(int min, int max) {
+            return (int)Math.floor(Math.random()*(max-min+1)+min);
         }
 
+         /**
+         * Adds a pebble to the user's hand. 
+         * @author Kate Belson and Michael Hills
+         */
         public void addPebble(){
             BlackBag blackBag = blackBags.get(getRandomNumber(0,2));
             synchronized (blackBag.getContents()){
@@ -172,44 +283,5 @@ public class PebbleGame {
 
             }
         }
-
-        //getter methods
-        /**
-         * Returns the total value of the pebbles held by the user.
-         * @author Kate Belson and Michael Hills
-         * @return the total value of the pebbles help by the user.
-         */
-        public int getTotal() {
-            synchronized (pebbles) {
-                int total = 0;
-                for (Integer pebble : pebbles) {
-                    total = total + pebble;
-                }
-                return total;
-            }
-        }
-
-        public String getPlayerName(){
-            return playerName;
-        }
-
     }
-
-
-
-    public void setNoUsers(int noUsers) {
-        this.noUsers = noUsers;
-    }
-
-    public int getNoUsers(){
-        return noUsers;
-    }
-
-    public ArrayList<User> getUsers(){
-        return users;
-    }
-
-    public PebbleGame() {
-    }
-
 }
