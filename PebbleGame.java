@@ -1,38 +1,58 @@
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Scanner;
 
 public class PebbleGame {
 
     private int noUsers;
-    private ArrayList<User> users;
+    private ArrayList<User> users = new ArrayList<>();
+    private ArrayList<BlackBag> blackBags = new ArrayList<>();
 
-    public File getFile(int num){
+    public BlackBag generateBlack(int num, char bagName){
         Scanner input = new Scanner(System.in);
         boolean validInput = false;
-        String fileName = null;
+        String fileName;
+        BlackBag blackBag = null;
 
         do {
-            System.out.println("Please enter location of bag number " + num + " to load: ");
+            System.out.print("Please enter location of bag number " + num + " to load: ");
             String type = input.nextLine();
-            fileName = System.getProperty("user.dir")+"\\src\\" + type;
+            fileName = System.getProperty("user.dir") + "\\src\\" + type;
 
-            if (type.equals("E")){
+            if (type.equals("E")) {
                 System.exit(0);
             }
-            else if(new File(fileName).isFile()) {
+            else if (new File(fileName).isFile()) {
+
                 validInput = true;
+                File file = new File(fileName);
+                try {
+                    blackBag = new BlackBag(file,bagName);
+                    if (blackBag.getContents().size() < noUsers*11){
+                        System.out.println("Invalid file contents: File must contain at least 11" +
+                                " times as many pebbles as players");
+                    }
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }catch (NumberFormatException ex){
+                    validInput = false;
+                    System.out.println("Invalid File Contents: File must be positive integers " +
+                            "separated by commas");
+                }
 
             }
-            else{
+            else {
                 System.out.println("Invalid file name: file does not exist");
             }
 
         } while (!validInput);
 
-        File file = new File(fileName);
-        return file;
+        blackBags.add(blackBag);
+        return blackBag;
+
+
     }
 
     public int printMenu() {
@@ -48,7 +68,7 @@ public class PebbleGame {
 
         boolean validInput = false;
         Scanner input = new Scanner(System.in);
-        String noUsers = null;
+        String noUsers;
         do {
             System.out.print("Enter Number: ");
             noUsers = input.nextLine();
@@ -71,15 +91,20 @@ public class PebbleGame {
     }
 
     class User{
-        private ArrayList<Integer> pebbles;
+        private List<Integer> pebbles = Collections.synchronizedList(new ArrayList<Integer>());
+        private Writer file;
+        private String playerName;
 
         /**
          * The constructor for the User class.
          * @author Kate Belson and Michael Hills
          */
-        public User ()  {
-            setPebbles();
+        public User (String playerName)  {
+            this.playerName = playerName;
+            createFile();
+
         }
+
 
         //setter methods
 
@@ -87,50 +112,90 @@ public class PebbleGame {
          * Sets the list of pebbles.
          * @author Kate Belson and Michael Hills
          */
+        public synchronized int getRandomNumber(int min, int max) {
+            return (int)Math.floor(Math.random()*(max-min+1)+min);
+        }
+
+        private void createFile() {
+            try {
+                file = new FileWriter(playerName + "_output.txt", false);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        public void addToFile(String s){
+            try {
+                file.write(s + System.getProperty("line.separator"));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                file.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+
         public void setPebbles() {
-            this.pebbles = new ArrayList<Integer>();
-            for (int i = 0; i < 10; i++){
+            BlackBag blackBag = blackBags.get(getRandomNumber(0,2));
+            synchronized (blackBag.getContents()) {
+                for (int i = 0; i < 10; i++) {
+                    pebbles.add(blackBag.takeRock(getRandomNumber(0, blackBag.getNoRocks() - 1)));
+                }
+                addToFile(playerName + " hand is " + pebbles);
+            }
+        }
+
+        public void addPebble(){
+            BlackBag blackBag = blackBags.get(getRandomNumber(0,2));
+            synchronized (blackBag.getContents()){
+
+                int toRemove = getRandomNumber(0, 9);
+                int removePebble = pebbles.get(toRemove);
+
+                blackBag.getWhiteBag().addPebble(pebbles.get(toRemove));
+                pebbles.remove(toRemove);
+
+                addToFile(playerName + "has discarded " + removePebble + " to bag "
+                        + blackBag.getWhiteBag().getBagName());
+                addToFile(playerName + " hand is " + pebbles);
+
+                int toAdd = getRandomNumber(0, blackBag.getNoRocks() - 1);
+                int addPebble = blackBag.takeRock(toAdd);
+                pebbles.add(addPebble);
+
+                addToFile(playerName + " has drawn " + addPebble + " from bag "
+                        + blackBag.getBagName());
+                addToFile(playerName + " hand is " + pebbles);
 
             }
         }
 
-        public void addPebble(int Pebble){
-            pebbles.add(Pebble);
-        }
-
         //getter methods
-
-        /**
-         * Returns the list of pebbles held by the user.
-         * @author Kate Belson and Michael Hills
-         * @return the list of pebbles help by the user.
-         */
-        public ArrayList<Integer> getPebbles() {
-            return this.pebbles;
-        }
-
         /**
          * Returns the total value of the pebbles held by the user.
          * @author Kate Belson and Michael Hills
          * @return the total value of the pebbles help by the user.
          */
         public int getTotal() {
-            int total = 0;
-            for (Integer pebble : pebbles) {
-                total = total + pebble;
+            synchronized (pebbles) {
+                int total = 0;
+                for (Integer pebble : pebbles) {
+                    total = total + pebble;
+                }
+                return total;
             }
-            return total;
+        }
+
+        public String getPlayerName(){
+            return playerName;
         }
 
     }
 
-    public void setUsers(){
-        this.users = new ArrayList<User>();
-        for (int i = 0; i < noUsers; i++) {
-            users.add(new User());
-            users.get(i).setPebbles();
-        }
-    }
+
 
     public void setNoUsers(int noUsers) {
         this.noUsers = noUsers;
@@ -138,6 +203,10 @@ public class PebbleGame {
 
     public int getNoUsers(){
         return noUsers;
+    }
+
+    public ArrayList<User> getUsers(){
+        return users;
     }
 
     public PebbleGame() {
