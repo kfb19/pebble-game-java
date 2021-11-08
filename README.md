@@ -48,6 +48,9 @@ Functions:
     - WhiteBag() - this function is the constructor for creating a WhiteBag object. It calls the setContents method to initialize the contents of the bag. 
    - setContents() - this function is the setter method for the private attribute 'contents'. It initally sets the contents of the bag to an empty ArrayList, as there are zero items in the bag at the start of the game. 
    - getContents() - this function is the getter method for the private attribute 'contents'. It returns the contents ArrayList, containing the weights of the pebbles in the bag. 
+   - getBagName() - this function is the getter method for the name of the black bag. It returns the char name of the bag. 
+   - switchBags() - this function aids the swap over of the contents of the white bag to the black bag. It returns a list of the values of the rocks to be taken from the white bag to the black bag. 
+   - addPebble(int pebble) - this function adds a rock (pebble) to the white bag after being discarded froma user's hand. 
 
 For more information please look at the attached JavaDocs. 
 
