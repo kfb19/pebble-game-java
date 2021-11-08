@@ -37,7 +37,12 @@ Functions:
 Functions: 
     - BlackBag(File file) - this function is the constructor for creating an object of the BlackBag class. It take an input of the file containing the details of what is in the black bag, and calls the setContents method to set the contents of the bag. 
     - setContents(File file) - this function is the setter method for the private attribute 'contents'. It opens the file passed in as a parameter, and each number (pebble weight/value) in the file is added to the contents ArrayList, until it has gone through every number in the file. 
+   - setWhiteBag(WhiteBag whiteBag) - this function is the setter method for the whiteBag parameter. It takes an input of a white bag and sets this to correspond with the black bag object being created. 
    - getContents() - this function is the getter method for the private attribute 'contents'. It returns the contents ArrayList (which contains the weights of the pebbles in the black bag). 
+   - getNoRocks() - this function is the getter method for the number of rock currently in the bag. It returns the integer value of the size of the bag (in rocks). 
+   - getWhiteBag() - this function is the getter method for the white bag corresponding to the selected black bag. It returns the white bag object. 
+   - getBagName() - this function is the getter method for the name of the black bag. It returns the char name of the bag. 
+   - takeRock(int pos) - this funcion takes the position of the rock to be selected from the bag, and selects it and returns the pebble selected. If the black bag is empty, it empties the contents of the corresponding white bag into the black bag. 
 4. WhiteBag.java - this class contains details about the white bags used to play the game. 
 Functions: 
     - WhiteBag() - this function is the constructor for creating a WhiteBag object. It calls the setContents method to initialize the contents of the bag. 
