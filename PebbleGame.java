@@ -1,10 +1,13 @@
 import java.util.ArrayList;
 
+/**
+ * The PebbleGame class is used for starting and running the game. 
+ * @author Kate Belson and Michael Hills
+ */
 
 public class PebbleGame {
 
     private static Game game;
-
 
     public static void main(String[] args) {
 
@@ -40,16 +43,56 @@ public class PebbleGame {
 
     }
 
+    
+    //other methods 
+
+     /**
+     * Get the pebbleGame instance of the game being played. 
+     * @author Kate Belson and Michael Hills
+     * @return the instance of the PebbleGame class that is being played. 
+     */
+
     public static Game getPebbleGame() {
         return game;
     }
 }
+
+/**
+ * The Players class is used for processing information about the players, and running the player threads. 
+ * @author Kate Belson and Michael Hills
+ */
 
 class Players implements Runnable{
 
     private final Game.User user;
     private Game game;
 
+    /**
+     * The constructor for the Players class. 
+     * @author Kate Belson and Michael Hills
+     * @param user is the user for that particular thread. 
+     */
+    public Players(Game.User user){
+        this.user = user;
+        setPebbleGame();
+    }
+
+    //setter methods 
+
+    /**
+     * Sets the pebble game being played. 
+     * @author Kate Belson and Michael Hills
+     */
+    private void setPebbleGame(){
+        game = PebbleGame.getPebbleGame();
+    }
+
+    //other methods 
+
+    /**
+     * Runs the player threads. 
+     * @author Kate Belson and Michael Hills
+     */
     public void run(){
         user.setPebbles();
         while (user.getTotal() != 100){
@@ -68,12 +111,7 @@ class Players implements Runnable{
 
     }
 
-    public Players(Game.User user){
-        this.user = user;
-        setPebbleGame();
-    }
-
-    private void setPebbleGame(){
-        game = PebbleGame.getPebbleGame();
-    }
+    
+   
+    
 }
