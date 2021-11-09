@@ -3,7 +3,7 @@
 
 ## Introduction
 
-Pebble Game is a program written for a University of Exeter Software Development coursework. The game is played by 1+ players, and involves three white bags and three black bags. The black bags contain pebbles with weights assigned to them, and each black bag has a corresponding white bag. Each user initially picks out 10 pebbles, then as the game progresses, they discard a pebble into a white back and draw another pebble from the black bag. If a black bag empties at any point, the pebbles from the corresponding white bag will be empitied into the black bag. A player has won the game if the combined weights of the pebbles in their hand is exactky 100. PLayers carry on picking and discarding pebbles until someone has won. 
+Pebble Game is a program written for a University of Exeter Software Development coursework. The game is played by 1+ players, and involves three white bags and three black bags. The black bags contain pebbles with weights assigned to them, and each black bag has a corresponding white bag. Each user initially picks out 10 pebbles, then as the game progresses, they discard a pebble into a white back and draw another pebble from the black bag. If a black bag empties at any point, the pebbles from the corresponding white bag will be empitied into the black bag. A player has won the game if the combined weights of the pebbles in their hand is exactky 100. Players carry on picking and discarding pebbles until someone has won. 
 
 ## Prerequisites
 
