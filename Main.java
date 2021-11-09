@@ -1,15 +1,11 @@
 import java.util.ArrayList;
 
-/**
- * The Main class is used for starting and running the game. 
- * @author Kate Belson and Michael Hills
- */
 
 public class Main{
 
     private static PebbleGame pebbleGame;
 
-    //static void main 
+
     public static void main(String[] args) {
 
         pebbleGame = new PebbleGame();
@@ -44,54 +40,16 @@ public class Main{
 
     }
 
-    //other methods 
-
-     /**
-     * Get the pebbleGame instance of the game being played. 
-     * @author Kate Belson and Michael Hills
-     * @return the instance of the PebbleGame class that is being played. 
-     */
     public static PebbleGame getPebbleGame() {
         return pebbleGame;
     }
 }
-
-/**
- * The Players class is used for processing information about the players, and running the player threads. 
- * @author Kate Belson and Michael Hills
- */
 
 class Players implements Runnable{
 
     private final PebbleGame.User user;
     private PebbleGame pebbleGame;
 
-    /**
-     * The constructor for the Players class. 
-     * @author Kate Belson and Michael Hills
-     * @param user is the user for that particular thread. 
-     */
-    public Players(PebbleGame.User user){
-        this.user = user;
-        setPebbleGame();
-    }
-
-    //setter methods 
-
-    /**
-     * Sets the pebble game being played. 
-     * @author Kate Belson and Michael Hills
-     */
-    private void setPebbleGame(){
-        pebbleGame = Main.getPebbleGame();
-    }
-
-    //other methods 
-
-     /**
-     * Runs the player threads. 
-     * @author Kate Belson and Michael Hills
-     */
     public void run(){
         user.setPebbles();
         while (user.getTotal() != 100){
@@ -108,5 +66,14 @@ class Players implements Runnable{
         System.out.println(user.getPlayerName() + " has won");
         System.exit(0);
 
+    }
+
+    public Players(PebbleGame.User user){
+        this.user = user;
+        setPebbleGame();
+    }
+
+    private void setPebbleGame(){
+        pebbleGame = Main.getPebbleGame();
     }
 }
