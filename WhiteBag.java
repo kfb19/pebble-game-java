@@ -21,9 +21,9 @@ public class WhiteBag {
      */
     public List<Integer> switchBags(){
         synchronized (contents) {
-                List<Integer> black = Collections.synchronizedList(new ArrayList<Integer>(contents));
-                contents.clear();
-                return black;
+            ArrayList<Integer> black = new ArrayList<Integer>(contents);
+            contents.clear();
+            return black;
         }
     }
 
@@ -31,7 +31,7 @@ public class WhiteBag {
      * The constructor for the White Bag class
      * @author Kate Belson and Michael Hills
      */
-    public  WhiteBag (BlackBag blackBag,char bagName) {
+    public WhiteBag (BlackBag blackBag, char bagName) {
         this.blackBag = blackBag;
         this.bagName = bagName;
         blackBag.setWhiteBag(this);
@@ -57,7 +57,9 @@ public class WhiteBag {
      * @return the contents of the White Bag.
      */
     public List<Integer> getContents() {
-        return contents;
+        synchronized (contents) {
+            return contents;
+        }
     }
 
     /**

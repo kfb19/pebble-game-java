@@ -3,6 +3,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 /**
  * The Game class provides the functionality and running of the game.
@@ -14,6 +20,13 @@ public class Game {
     private int noUsers;
     private ArrayList<User> users = new ArrayList<>();
     private ArrayList<BlackBag> blackBags = new ArrayList<>();
+
+
+    private static String readFile(String path, Charset encoding) throws IOException
+    {
+        byte[] encoded = Files.readAllBytes(Paths.get(path));
+        return new String(encoded, encoding);
+    }
 
 
     /**
@@ -28,6 +41,8 @@ public class Game {
         boolean validInput = false;
         String fileName;
         BlackBag blackBag = null;
+        String content = null;
+
 
         do {
             System.out.print("Please enter location of bag number " + num + " to load: ");
@@ -42,7 +57,18 @@ public class Game {
                 validInput = true;
                 File file = new File(fileName);
                 try {
+
+                    content = readFile(fileName, StandardCharsets.UTF_8);
+
+                    if (content.contains("-")){
+                        System.out.println("Invalid File Contents: File must be positive integers " +
+                                "separated by commas");
+                        validInput = false;
+                        continue;
+                    }
+
                     blackBag = new BlackBag(file,bagName);
+
                     if (blackBag.getContents().size() < noUsers*11){
                         System.out.println("Invalid file contents: File must contain at least 11" +
                                 " times as many pebbles as players");
@@ -54,6 +80,9 @@ public class Game {
                     validInput = false;
                     System.out.println("Invalid File Contents: File must be positive integers " +
                             "separated by commas");
+                }
+                catch (IOException exx){
+
                 }
 
             }
@@ -67,12 +96,11 @@ public class Game {
         return blackBag;
     }
 
-/*
+
     public void addBlack(BlackBag blackBag){
         blackBags.add(blackBag);
     }
 
- */
 
     /**
      * Prints the menu options for the start of the game.
@@ -94,7 +122,7 @@ public class Game {
         Scanner input = new Scanner(System.in);
         String noUsers;
         do {
-            System.out.print("Enter Number: ");
+            System.out.println("Enter Number: ");
             noUsers = input.nextLine();
             try {
 
@@ -110,6 +138,7 @@ public class Game {
             }
 
         } while (!validInput);
+
 
         return Integer.parseInt(noUsers);
     }
@@ -143,7 +172,7 @@ public class Game {
          * @param max the maximum value of the random number.
          * @return the random number generated.
          */
-        public synchronized int getRandomNumber(int min, int max) {
+        public int getRandomNumber(int min, int max) {
             return (int)Math.floor(Math.random()*(max-min+1)+min);
         }
 
@@ -165,16 +194,31 @@ public class Game {
          * @author Kate Belson and Michael Hills
          */
         public void addToFile(String s){
-            try {
-                file.write(s + System.getProperty("line.separator"));
-            } catch (IOException e) {
-                e.printStackTrace();
+            if (!PebbleGame.finished.contains(true)) {
+                try {
+                    file.write(s + System.getProperty("line.separator"));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    file.flush();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
-            try {
-                file.flush();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        }
+
+        public void addToFileWon(String s){
+                try {
+                    file.write(s + System.getProperty("line.separator"));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    file.flush();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
         }
 
         /**
@@ -196,27 +240,29 @@ public class Game {
          * @author Kate Belson and Michael Hills
          */
         public void addPebble(){
-            BlackBag blackBag = blackBags.get(getRandomNumber(0,2));
-            synchronized (blackBag.getContents()){
+            if (!PebbleGame.finished.contains(true)) {
+                BlackBag blackBag = blackBags.get(getRandomNumber(0, 2));
 
-                int toRemove = getRandomNumber(0, 9);
-                int removePebble = pebbles.get(toRemove);
+                synchronized (blackBag) {
 
-                blackBag.getWhiteBag().addPebble(pebbles.get(toRemove));
-                pebbles.remove(toRemove);
+                    int toRemove = getRandomNumber(0, 9);
+                    int removePebble = pebbles.get(toRemove);
 
-                addToFile(playerName + "has discarded " + removePebble + " to bag "
-                        + blackBag.getWhiteBag().getBagName());
-                addToFile(playerName + " hand is " + pebbles);
+                    blackBag.getWhiteBag().addPebble(pebbles.get(toRemove));
+                    pebbles.remove(toRemove);
 
-                int toAdd = getRandomNumber(0, blackBag.getNoRocks() - 1);
-                int addPebble = blackBag.takeRock(toAdd);
-                pebbles.add(addPebble);
+                    addToFile(playerName + " has discarded " + removePebble + " to bag "
+                            + blackBag.getWhiteBag().getBagName());
+                    addToFile(playerName + " hand is " + pebbles);
 
-                addToFile(playerName + " has drawn " + addPebble + " from bag "
-                        + blackBag.getBagName());
-                addToFile(playerName + " hand is " + pebbles);
+                    int toAdd = getRandomNumber(0, blackBag.getNoRocks() - 1);
+                    int addPebble = blackBag.takeRock(toAdd);
+                    pebbles.add(addPebble);
 
+                    addToFile(playerName + " has drawn " + addPebble + " from bag "
+                            + blackBag.getBagName());
+                    addToFile(playerName + " hand is " + pebbles);
+                }
             }
         }
 
@@ -284,3 +330,5 @@ public class Game {
     }
 
 }
+
+

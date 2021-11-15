@@ -1,8 +1,9 @@
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
-import java.io.*;
 
 /**
  * The BlackBag class processes the Black Bag file and the information it contains.
@@ -20,7 +21,7 @@ public class BlackBag {
      * @param file the file containing the information about the Black Bag.
      * @throws FileNotFoundException
      */
-    public BlackBag (File file,char bagName) throws FileNotFoundException {
+    public BlackBag (File file, char bagName) throws FileNotFoundException {
         this.bagName = bagName;
         setContents(file);
 
@@ -33,9 +34,9 @@ public class BlackBag {
      * @return the random number
      */
     public int getRandomNumber(int min, int max) {
-        synchronized (contents) {
-            return (int) Math.floor(Math.random() * (max - min + 1) + min);
-        }
+
+        return (int) Math.floor(Math.random() * (max - min + 1) + min);
+
     }
 
     /**
@@ -49,9 +50,9 @@ public class BlackBag {
         synchronized (contents) {
             if (contents.size() == 0) {
                 contents = whiteBag.switchBags();
-                pos = getRandomNumber(0,this.getNoRocks()-1);
-            }
+                pos = getRandomNumber(0,this.getNoRocks() - 1);
 
+            }
             int pebble = contents.get(pos);
             contents.remove(pos);
             return pebble;
@@ -115,7 +116,6 @@ public class BlackBag {
         synchronized (contents){
             return contents.size();
         }
-
     }
 
 
@@ -125,7 +125,9 @@ public class BlackBag {
      * @return the corresponding white bag.
      */
     public WhiteBag getWhiteBag() {
-        return whiteBag;
+        synchronized (whiteBag.getContents()) {
+            return whiteBag;
+        }
     }
 
     /**
@@ -137,4 +139,5 @@ public class BlackBag {
         return bagName;
     }
 }
+
 
