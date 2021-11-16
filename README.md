@@ -36,6 +36,7 @@ Then using the junit and hamcrest jar files provided in the src directory, enter
 
 ```bash
 java -cp "junit-4.13.1.jar;hamcrest-core-1.3.jar;." org.junit.runner.JUnitCore TestSuite
+```
 
 ## Authors 
 
