@@ -17,12 +17,8 @@ There is no prior instillation required for this program, other than the correct
 
 ## Getting Started 
 
-Using the command line, enter the src directory of the published directory.
 
 
-```bash
-java PebbleGame
-```
 
 ## Developer Documentation
 
@@ -30,7 +26,16 @@ For information on our design choices please look at the enclosed report. For in
 
 ## Testing
 
+Using the command line, enter the src directory of the published directory. E.g.:
 
+```bash
+cd C:\Users\mjhil\Desktop\Software CA Test 2\src
+```
+
+Then using the junit and hamcrest jar files provided in the src directory, enter the following into the command line to run the tests:
+
+```bash
+java -cp "junit-4.13.1.jar;hamcrest-core-1.3.jar;." org.junit.runner.JUnitCore TestSuite
 
 ## Authors 
 
