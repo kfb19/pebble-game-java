@@ -17,7 +17,8 @@ There is no prior instillation required for this program, other than the correct
 
 ## Getting Started 
 
-Use command line...
+Using the command line, enter the src directory of the published directory.
+
 
 ```bash
 java PebbleGame
@@ -34,7 +35,7 @@ For information on our design choices please look at the enclosed report. For in
 ## Authors 
 
 - Kate Belson (Undergraduate Student studying BSc Computer Science at the University of Exeter)
-- Michael Hills (Undergraduate Student studying BSc Computer Science at the University of Exeter)
+- Michael Hills (Undergraduate Student studying MSc Computer Science at the University of Exeter)
 
 ## Handle
 
