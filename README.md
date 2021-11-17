@@ -17,9 +17,12 @@ There is no prior instillation required for this program, other than the correct
 
 ## Getting Started 
 
+To run the jar file, first enter the directory you have stored it in using the command line. Then enter the following command:
 
-
-
+```bash
+java -jar pebbles.jar
+```
+Note: the files containing the pebbles should be stored in "input_files"
 ## Developer Documentation
 
 For information on our design choices please look at the enclosed report. For information on the classes and functions this program contains, please look at the attached JavaDocs or the code comments. 
