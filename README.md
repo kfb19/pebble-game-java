@@ -17,7 +17,9 @@ There is no prior instillation required for this program, other than the correct
 
 ## Getting Started 
 
-To run the jar file, first enter the directory you have stored it in using the command line. Then enter the following command:
+Extract all the contents from the SoftDev CA.zip and store in a easy to find folder. Then extract all contents from byte_class_files.zip and again store in an easy to find folder.
+
+To run the jar file, first enter the directory you have stored the jar file and input_files folder in using the command line. Then enter the following command:
 
 ```bash
 java -jar pebbles.jar
@@ -29,7 +31,7 @@ For information on our design choices please look at the enclosed report. For in
 
 ## Testing
 
-Using the command line, enter the src directory of the published directory. E.g.:
+Using the command line, enter the directory of where you stored the contents of  byte_class_files.zip. E.g:
 
 ```bash
 cd C:\Users\mjhil\Desktop\Software CA Test 2\src
