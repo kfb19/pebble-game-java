@@ -31,13 +31,13 @@ For information on our design choices please look at the enclosed report. For in
 
 ## Testing
 
-Using the command line, enter the directory of where you stored the contents of  byte_class_files.zip. E.g:
+Using the command line, enter the directory of where you stored the contents of pebblesTest.zip. E.g:
 
 ```bash
-cd C:\Users\mjhil\Desktop\Software CA Test 2\src
+cd C:\Users\mjhil\Desktop\Software CA Test 2\pebblesTest
 ```
 
-Then using the junit and hamcrest jar files provided in the src directory, enter the following into the command line to run the tests:
+Then using the junit and hamcrest jar files provided in the zip, enter the following into the command line to run the tests:
 
 ```bash
 java -cp "junit-4.13.1.jar;hamcrest-core-1.3.jar;." org.junit.runner.JUnitCore TestSuite
