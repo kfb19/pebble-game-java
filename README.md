@@ -17,7 +17,7 @@ There is no prior instillation required for this program, other than the correct
 
 ## Getting Started 
 
-Extract all the contents from the SoftDev CA.zip and store in a easy to find folder. Then extract all contents from byte_class_files.zip and again store in an easy to find folder.
+Extract all the contents from the SoftDev CA.zip and store in a easy to find folder. Then extract all contents from pebblesTest.zip and again store in an easy to find folder.
 
 To run the jar file, first enter the directory you have stored the jar file and input_files folder in using the command line. Then enter the following command:
 
